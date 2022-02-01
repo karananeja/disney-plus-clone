@@ -32,6 +32,7 @@ const Header = () => {
             <span>SERIES</span>
           </a>
         </NavMenu>
+        {/* add user image later */}
         <UserImg src='/images/logo.svg'></UserImg>
       </Nav>
     </div>
