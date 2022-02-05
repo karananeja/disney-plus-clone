@@ -1,11 +1,66 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import {
+  selectUserName,
+  selectUserPhoto,
+  setSignOut,
+  setUserLogin,
+} from '../features/user/userSlice';
+import { useSelector } from 'react-redux';
+import { auth, provider } from '../firebase';
+import { useDispatch } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const userName = useSelector(selectUserName);
+  const userPhoto = useSelector(selectUserPhoto);
+
+  const signIn = () => {
+    auth.signInWithPopup(provider).then((result) => {
+      let user = result.user;
+      dispatch(
+        setUserLogin({
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+        })
+      );
+      history.push('/');
+    });
+  };
+
+  const signOut = () => {
+    auth.signOut().then(() => {
+      dispatch(setSignOut());
+      history.push('/login');
+    });
+  };
+
+  useEffect(() => {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        dispatch(
+          setUserLogin({
+            name: user.displayName,
+            email: user.email,
+            photo: user.photoURL,
+          })
+        );
+      }
+    });
+  }, []);
+
   return (
-    <div className='header'>
+    <div
+      className='header'
+      style={{ position: 'sticky', top: '0', 'z-index': '1' }}
+    >
       <Nav>
-        <Logo src='/images/logo.svg' />
+        <Link to='/'>
+          <Logo src='/images/logo.svg' />
+        </Link>
         <NavMenu>
           <a>
             <img src='images/home-icon.svg' alt='' />
@@ -32,8 +87,15 @@ const Header = () => {
             <span>SERIES</span>
           </a>
         </NavMenu>
-        {/* add user image later */}
-        <UserImg src='/images/logo.svg'></UserImg>
+        {!userName ? (
+          <Login onClick={signIn}>Login</Login>
+        ) : (
+          <>
+            <Link to='/login'>
+              <UserImg onClick={signOut} src={userPhoto}></UserImg>
+            </Link>
+          </>
+        )}
       </Nav>
     </div>
   );
@@ -101,4 +163,20 @@ const UserImg = styled.img`
   height: 48px;
   border-radius: 50%;
   cursor: pointer;
+`;
+
+const Login = styled.div`
+  border-radius: 8px;
+  border: 1px solid var(--white-color);
+  padding: 8px 16px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 250ms ease;
+
+  &:hover {
+    background-color: var(--white-color);
+    color: var(--black-color);
+    border-color: transparent;
+  }
 `;

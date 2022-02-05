@@ -1,23 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
+import { selectMovies } from '../features/movie/movieSlice';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const Movies = () => {
+  const movies = useSelector(selectMovies);
+
   return (
     <Container className='movies'>
       <h4>Recommended for You</h4>
       <Content>
-        <Wrap>
-          <img src='https://img1.hotstarext.com/image/upload/f_auto,t_web_vl_3x/sources/r1/cms/prod/3034/1103034-v-afeac4412b5d' />
-        </Wrap>
-        <Wrap>
-          <img src='https://img1.hotstarext.com/image/upload/f_auto,t_web_vl_3x/sources/r1/cms/prod/3034/1103034-v-afeac4412b5d' />
-        </Wrap>
-        <Wrap>
-          <img src='https://img1.hotstarext.com/image/upload/f_auto,t_web_vl_3x/sources/r1/cms/prod/3034/1103034-v-afeac4412b5d' />
-        </Wrap>
-        <Wrap>
-          <img src='https://img1.hotstarext.com/image/upload/f_auto,t_web_vl_3x/sources/r1/cms/prod/3034/1103034-v-afeac4412b5d' />
-        </Wrap>
+        {movies?.map((movie) => (
+          <Link to={`/detail/${movie.id}`}>
+            <Wrap key={movie.id}>
+              <img src={movie.cardImg} alt={movie.title} />
+            </Wrap>
+          </Link>
+        ))}
       </Content>
     </Container>
   );
@@ -30,7 +30,7 @@ const Container = styled.div``;
 const Content = styled.div`
   display: grid;
   grid-gap: 25px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   margin: 20px 0;
 `;
 
