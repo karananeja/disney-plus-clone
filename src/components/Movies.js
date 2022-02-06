@@ -12,11 +12,11 @@ const Movies = () => {
       <h4>Recommended for You</h4>
       <Content>
         {movies?.map((movie) => (
-          <Link to={`/detail/${movie.id}`}>
-            <Wrap key={movie.id}>
+          <Wrap key={movie.id}>
+            <Link to={`/detail/${movie.id}`}>
               <img src={movie.cardImg} alt={movie.title} />
-            </Wrap>
-          </Link>
+            </Link>
+          </Wrap>
         ))}
       </Content>
     </Container>

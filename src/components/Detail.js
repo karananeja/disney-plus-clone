@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import db from '../firebase';
+import ReactPlayer from 'react-player';
 
 const Detail = () => {
   const [movie, setMovie] = useState({});
+  const [showTrailer, setShowTrailer] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
@@ -33,7 +35,7 @@ const Detail = () => {
               <img src='/images/play-icon-black.png' />
               <span>Play</span>
             </PlayButton>
-            <TrailerButton>
+            <TrailerButton onClick={() => setShowTrailer(!showTrailer)}>
               <img src='/images/play-icon-white.png' />
               <span>Trailer</span>
             </TrailerButton>
@@ -45,8 +47,12 @@ const Detail = () => {
             </GroupWatchButton>
           </Controls>
           <SubTitle>{movie.subtitle}</SubTitle>
-          {/* • */}
           <Description>{movie.description}</Description>
+          {showTrailer && (
+            <VideoTrailer>
+              <ReactPlayer url={movie.trailerLink} controls={true} />
+            </VideoTrailer>
+          )}
         </>
       )}
     </Container>
@@ -154,4 +160,8 @@ const Description = styled.div`
   font-size: 20px;
   margin-top: 16px;
   max-width: 760px;
+`;
+
+const VideoTrailer = styled.div`
+  margin: 20px 0;
 `;

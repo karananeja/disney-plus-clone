@@ -55,7 +55,7 @@ const Header = () => {
   return (
     <div
       className='header'
-      style={{ position: 'sticky', top: '0', 'z-index': '1' }}
+      style={{ position: 'sticky', top: '0', zIndex: '1' }}
     >
       <Nav>
         <Link to='/'>
